@@ -14,7 +14,9 @@ return [
     'modules' => [
         'user' => [
             'class' => 'dektrium\user\Module',
+            'admins' => ['admin']
         ],
+        'gii' => 'yii\gii\Module',
     ],
     'components' => [
         

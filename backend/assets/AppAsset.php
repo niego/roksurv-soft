@@ -21,7 +21,7 @@ class AppAsset extends AssetBundle
         //'css/site.css',
     ];
     public $js = [
-        'adminlte/bootstrap/js/bootstrap.min.js'
+        //'adminlte/bootstrap/js/bootstrap.min.js'
     ];
     public $jsOptions = array(
         'position' => \yii\web\View::POS_HEAD
