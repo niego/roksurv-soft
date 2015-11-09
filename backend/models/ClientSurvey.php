@@ -38,7 +38,7 @@ class ClientSurvey extends \yii\db\ActiveRecord
         return [
             [['client_id'], 'required'],
             [['client_id'], 'integer'],
-            [['qa_trans_kwalitas_jalan', 'qa_energy_listrik', 'qa_water_mng', 'qa_equity_to_asset_ratio', 'qa_fixed_asset_to_total_equity_ratio', 'qn_debt_to_equity_ratio', 'qn_long_term_liabilities', 'ps_extraversi_sikap_sosial', 'ps_agreebleness'], 'boolean']
+            [['qa_trans_kwalitas_jalan', 'qa_energy_listrik', 'qa_water_mng', 'qa_equity_to_asset_ratio', 'qa_fixed_asset_to_total_equity_ratio', 'qn_debt_to_equity_ratio', 'qn_long_term_liabilities', 'ps_extraversi_sikap_sosial', 'ps_agreebleness'], 'integer']
         ];
     }
 

@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-
+use kartik\grid\GridView;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ClientSurveySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -10,34 +10,51 @@ use yii\grid\GridView;
 $this->title = Yii::t('app', 'Client Surveys');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="client-survey-index">
+<section class="content-header">
+    <h1>
+      <?= Html::encode($this->title) ?>
+    </h1>
+    
+    <ol class="breadcrumb">
+        <li class="active"><a href="#"><i class="fa fa-dashboard"></i> <?= Html::encode($this->title) ?></a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <h3 class="box-title"></h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body width-responsive">
+				 <p>
+					<?= Html::a(Yii::t('app', 'Create Client Survey'), ['create'], ['class' => 'btn btn-success']) ?>
+				</p>
+				<?php Pjax::begin(['id' => 'pjax-gridview']) ?>
+				<?= GridView::widget([
+					'dataProvider' => $dataProvider,
+					'filterModel' => $searchModel,
+					'columns' => [
+						['class' => 'yii\grid\SerialColumn'],
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+						[
+							'attribute' => 'client',
+							'value' => 'client.nama_lengkap'
+						],
+						'qa_trans_kwalitas_jalan',
+						'qa_energy_listrik',
+						'qa_water_mng',
+						'qa_equity_to_asset_ratio',
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Client Survey'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'client_id',
-            'qa_trans_kwalitas_jalan:boolean',
-            'qa_energy_listrik:boolean',
-            'qa_water_mng:boolean',
-            'qa_equity_to_asset_ratio:boolean',
-            // 'qa_fixed_asset_to_total_equity_ratio:boolean',
-            // 'qn_debt_to_equity_ratio:boolean',
-            // 'qn_long_term_liabilities:boolean',
-            // 'ps_extraversi_sikap_sosial:boolean',
-            // 'ps_agreebleness:boolean',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
-</div>
+						['class' => 'yii\grid\ActionColumn'],
+					],
+				]); ?>
+				<?php Pjax::end() ?>
+			</div>
+        </div>
+        </div>
+    </div>
+</section>

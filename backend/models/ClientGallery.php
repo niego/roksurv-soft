@@ -31,10 +31,11 @@ class ClientGallery extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'client_id'], 'integer'],
-            [['created_date'], 'safe'],
-            [['image', 'image_thumb'], 'string', 'max' => 50]
+            [['client_id'], 'required'],
+            [['client_id','created_by','updated_by'], 'integer'],
+            [['created_date','updated_date'], 'safe'],
+			[['image'], 'file', 'extensions' => 'jpeg, gif, png'],   
+            [['image_thumb'], 'string', 'max' => 50]
         ];
     }
 
@@ -59,4 +60,33 @@ class ClientGallery extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Client::className(), ['id' => 'client_id']);
     }
+	
+	public function beforeSave()
+	{
+		if($this->isNewRecord){
+			$this->created_date = date('Y-m-d H:i:s');
+			$this->created_by = Yii::$app->user->getId();
+		}else{
+			$this->updated_date = date('Y-m-d H:i:s');
+			$this->updated_by = Yii::$app->user->getId();
+		}
+		return parent::beforeSave();
+	}
+	
+	public function behaviors()
+	{
+		return [
+			[
+				'class' => '\yiidreamteam\upload\ImageUploadBehavior',
+				'attribute' => 'image',
+				'thumbs' => [
+					'thumb' => ['width' => 200, 'height' => 100],
+				],
+				'filePath' => '@webroot/upload/images/clients/image_[[pk]].[[extension]]',
+				'fileUrl' => '/upload/images/clients/image_[[pk]].[[extension]]',
+				'thumbPath' => '@webroot/upload/images/clients/image_[[profile]]_[[pk]].[[extension]]',
+				'thumbUrl' => '/upload/images/clients/image_[[profile]]_[[pk]].[[extension]]',
+			],
+		];
+	}
 }

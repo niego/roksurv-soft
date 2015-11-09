@@ -50,16 +50,16 @@
 							<!-- User Account: style can be found in dropdown.less -->
 							<li class="dropdown user user-menu">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<img src="<?=Yii::getAlias('@web'); ?>/adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-								<span class="hidden-xs">Alexander Pierce</span>
+								<!--img src="<?=Yii::getAlias('@web'); ?>/adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"-->
+								<span class="hidden-xs"><?=Yii::$app->user->identity->username;?></span>
 								</a>
 								<ul class="dropdown-menu">
 									<!-- User image -->
 									<li class="user-header">
-										<img src="<?=Yii::getAlias('@web'); ?>/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+										<!--img src="<?=Yii::getAlias('@web'); ?>/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"-->
 										<p>
-											Alexander Pierce - Web Developer
-											<small>Member since Nov. 2012</small>
+											<?=Yii::$app->user->identity->username;?>
+											
 										</p>
 									</li>
 									<!-- Menu Body -->
@@ -99,7 +99,7 @@
 					<!-- Sidebar user panel -->
 					<div class="user-panel" style="height:60px">
 						<div class="pull-left info" style="margin-left:-50px">
-							<p>Alexander Pierce</p>
+							<p><?=Yii::$app->user->identity->username;?></p>
 							<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
 						</div>
 					</div>

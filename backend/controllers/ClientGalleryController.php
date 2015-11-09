@@ -63,6 +63,11 @@ class ClientGalleryController extends Controller
         $model = new ClientGallery();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$id = Yii::$app->db->getLastInsertID();
+			$model2 = $this->findModel($id);
+			$model2->image = $model2->getImageFileUrl('image');
+			$model2->image_thumb = $model2->getThumbFileUrl('image');
+			$model2->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -80,8 +85,11 @@ class ClientGalleryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$model2 = $this->findModel($id);
+			$model2->image = $model2->getImageFileUrl('image');
+			$model2->image_thumb = $model2->getThumbFileUrl('image');
+			$model2->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

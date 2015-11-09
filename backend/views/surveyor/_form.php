@@ -1,8 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-
+use kartik\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use dektrium\user\models\User;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Surveyor */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($model, 'user_id')->dropDownList(ArrayHelper::map(User::find()->all(), 'id', 'username'), ['prompt' => '']) ?>
 
     <?= $form->field($model, 'surveyor_no')->textInput(['maxlength' => true]) ?>
 
@@ -33,14 +36,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'no_telp')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'fax')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'created_by')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'created_date')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'updated_date')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

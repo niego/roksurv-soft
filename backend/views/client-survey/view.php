@@ -10,35 +10,54 @@ $this->title = $model->client_id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Client Surveys'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="client-survey-view">
+<section class="content-header">
+    <h1>
+      <?= Html::encode($this->title) ?>
+    </h1>
+    
+    <ol class="breadcrumb">
+        <li class="active"><a href="#"><i class="fa fa-dashboard"></i> <?= Html::encode($this->title) ?></a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <h3 class="box-title"></h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body width-responsive">
+				 <p>
+					<?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->client_id], ['class' => 'btn btn-primary']) ?>
+					<?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->client_id], [
+						'class' => 'btn btn-danger',
+						'data' => [
+							'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+							'method' => 'post',
+						],
+					]) ?>
+				</p>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->client_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->client_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'client_id',
-            'qa_trans_kwalitas_jalan:boolean',
-            'qa_energy_listrik:boolean',
-            'qa_water_mng:boolean',
-            'qa_equity_to_asset_ratio:boolean',
-            'qa_fixed_asset_to_total_equity_ratio:boolean',
-            'qn_debt_to_equity_ratio:boolean',
-            'qn_long_term_liabilities:boolean',
-            'ps_extraversi_sikap_sosial:boolean',
-            'ps_agreebleness:boolean',
-        ],
-    ]) ?>
-
-</div>
+				<?= DetailView::widget([
+					'model' => $model,
+					'attributes' => [
+						'client.nama_lengkap',
+						'qa_trans_kwalitas_jalan',
+						'qa_energy_listrik',
+						'qa_water_mng',
+						'qa_equity_to_asset_ratio',
+						'qa_fixed_asset_to_total_equity_ratio',
+						'qn_debt_to_equity_ratio',
+						'qn_long_term_liabilities',
+						'ps_extraversi_sikap_sosial',
+						'ps_agreebleness',
+					],
+				]) ?>
+			</div>
+        </div>
+        </div>
+    </div>
+</section>

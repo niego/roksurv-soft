@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\Client;
+use dektrium\user\models\User;
 
 /**
  * ClientSearch represents the model behind the search form about `backend\models\Client`.
@@ -15,12 +16,14 @@ class ClientSearch extends Client
     /**
      * @inheritdoc
      */
+	public $user;
     public function rules()
     {
         return [
-            [['id', 'user_id', 'surveyor_id'], 'integer'],
-            [['client_no', 'title', 'nama_lengkap', 'nama_keluarga', 'email', 'alamat', 'kecamatan', 'kabkota', 'propinsi', 'kode_pos', 'identitas', 'identitas_no', 'no_hp', 'no_telp', 'fax', 'website', 'note', 'profile_picture', 'company_name', 'entrepeneur', 'sector', 'industry', 'type_industry', 'industry_address', 'industry_kecamatan', 'industry_kabkota', 'industry_propinsi', 'industry_kode_pos', 'industry_telp', 'industry_fax', 'created_by', 'created_date', 'updated_date', 'updated_by'], 'safe'],
+            [['id', 'user_id', 'kecamatan', 'kabkota', 'propinsi', 'industry_kecamatan', 'industry_kabkota', 'industry_propinsi', 'surveyor_id'], 'integer'],
+            [['client_no', 'title', 'nama_lengkap', 'nama_keluarga', 'email', 'alamat', 'kode_pos', 'identitas', 'identitas_no', 'no_hp', 'no_telp', 'fax', 'website', 'note', 'profile_picture', 'company_name', 'entrepeneur', 'sector', 'industry', 'type_industry', 'industry_address', 'industry_kode_pos', 'industry_telp', 'industry_fax', 'created_by', 'created_date', 'updated_date', 'updated_by'], 'safe'],
             [['latitude', 'longitude'], 'number'],
+			[['user'], 'safe'],
         ];
     }
 
@@ -43,11 +46,14 @@ class ClientSearch extends Client
     public function search($params)
     {
         $query = Client::find();
-
+		$query->joinWith(['user']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+		$dataProvider->sort->attributes['user'] = [
+			'asc' => ['user.username' => SORT_ASC],
+			'desc' => ['user.username' => SORT_DESC],
+		];
         $this->load($params);
 
         if (!$this->validate()) {
@@ -59,8 +65,14 @@ class ClientSearch extends Client
         $query->andFilterWhere([
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'kecamatan' => $this->kecamatan,
+            'kabkota' => $this->kabkota,
+            'propinsi' => $this->propinsi,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'industry_kecamatan' => $this->industry_kecamatan,
+            'industry_kabkota' => $this->industry_kabkota,
+            'industry_propinsi' => $this->industry_propinsi,
             'surveyor_id' => $this->surveyor_id,
             'created_date' => $this->created_date,
             'updated_date' => $this->updated_date,
@@ -72,9 +84,6 @@ class ClientSearch extends Client
             ->andFilterWhere(['like', 'nama_keluarga', $this->nama_keluarga])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'alamat', $this->alamat])
-            ->andFilterWhere(['like', 'kecamatan', $this->kecamatan])
-            ->andFilterWhere(['like', 'kabkota', $this->kabkota])
-            ->andFilterWhere(['like', 'propinsi', $this->propinsi])
             ->andFilterWhere(['like', 'kode_pos', $this->kode_pos])
             ->andFilterWhere(['like', 'identitas', $this->identitas])
             ->andFilterWhere(['like', 'identitas_no', $this->identitas_no])
@@ -90,15 +99,13 @@ class ClientSearch extends Client
             ->andFilterWhere(['like', 'industry', $this->industry])
             ->andFilterWhere(['like', 'type_industry', $this->type_industry])
             ->andFilterWhere(['like', 'industry_address', $this->industry_address])
-            ->andFilterWhere(['like', 'industry_kecamatan', $this->industry_kecamatan])
-            ->andFilterWhere(['like', 'industry_kabkota', $this->industry_kabkota])
-            ->andFilterWhere(['like', 'industry_propinsi', $this->industry_propinsi])
             ->andFilterWhere(['like', 'industry_kode_pos', $this->industry_kode_pos])
             ->andFilterWhere(['like', 'industry_telp', $this->industry_telp])
             ->andFilterWhere(['like', 'industry_fax', $this->industry_fax])
             ->andFilterWhere(['like', 'created_by', $this->created_by])
-            ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
-
+            ->andFilterWhere(['like', 'updated_by', $this->updated_by])
+			->andFilterWhere(['like', 'user.username', $this->user]);
+		
         return $dataProvider;
     }
 }

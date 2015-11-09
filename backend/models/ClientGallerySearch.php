@@ -15,11 +15,13 @@ class ClientGallerySearch extends ClientGallery
     /**
      * @inheritdoc
      */
+	public $client;
     public function rules()
     {
         return [
             [['id', 'client_id'], 'integer'],
             [['image', 'image_thumb', 'created_date'], 'safe'],
+			[['client'], 'safe'],
         ];
     }
 
@@ -42,11 +44,14 @@ class ClientGallerySearch extends ClientGallery
     public function search($params)
     {
         $query = ClientGallery::find();
-
+		$query->joinWith(['client']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+		$dataProvider->sort->attributes['client'] = [
+			'asc' => ['client.nama_lengkap' => SORT_ASC],
+			'desc' => ['client.nama_lengkap' => SORT_DESC],
+		];
         $this->load($params);
 
         if (!$this->validate()) {
@@ -62,7 +67,8 @@ class ClientGallerySearch extends ClientGallery
         ]);
 
         $query->andFilterWhere(['like', 'image', $this->image])
-            ->andFilterWhere(['like', 'image_thumb', $this->image_thumb]);
+            ->andFilterWhere(['like', 'image_thumb', $this->image_thumb])
+			->andFilterWhere(['like', 'client.nama_lengkap', $this->client]);
 
         return $dataProvider;
     }

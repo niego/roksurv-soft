@@ -1,7 +1,7 @@
 <?php
 
 namespace backend\models;
-
+use dektrium\user\models\User;
 use Yii;
 
 /**
@@ -44,10 +44,10 @@ class Surveyor extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'nama_lengkap', 'email', 'company', 'jenis_kelamin', 'identitas', 'identitas_no', 'no_hp'], 'required'],
-            [['user_id'], 'integer'],
+            [['user_id', 'created_by', 'updated_by'], 'integer'],
             [['jenis_kelamin', 'identitas'], 'string'],
             [['created_date', 'updated_date'], 'safe'],
-            [['surveyor_no', 'nama_lengkap', 'email', 'identitas_no', 'created_by', 'updated_by'], 'string', 'max' => 25],
+            [['surveyor_no', 'nama_lengkap', 'email', 'identitas_no'], 'string', 'max' => 25],
             [['company'], 'string', 'max' => 50],
             [['no_hp', 'no_telp', 'fax'], 'string', 'max' => 15]
         ];
@@ -93,4 +93,16 @@ class Surveyor extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+	
+	public function beforeSave()
+	{
+		if($this->isNewRecord){
+			$this->created_date = date('Y-m-d H:i:s');
+			$this->created_by = Yii::$app->user->getId();
+		}else{
+			$this->updated_date = date('Y-m-d H:i:s');
+			$this->updated_by = Yii::$app->user->getId();
+		}
+		return parent::beforeSave();
+	}
 }

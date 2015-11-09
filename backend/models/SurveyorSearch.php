@@ -1,7 +1,7 @@
 <?php
 
 namespace backend\models;
-
+use dektrium\user\models\User;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -15,12 +15,14 @@ class SurveyorSearch extends Surveyor
     /**
      * @inheritdoc
      */
+	public $user;
     public function rules()
     {
         return [
             [['id', 'user_id'], 'integer'],
             [['surveyor_no', 'nama_lengkap', 'email', 'company', 'jenis_kelamin', 'identitas', 'identitas_no', 'no_hp', 'no_telp', 'fax', 'created_by', 'created_date', 'updated_by', 'updated_date'], 'safe'],
-        ];
+			[['user'], 'safe'],
+		];
     }
 
     /**
@@ -42,11 +44,14 @@ class SurveyorSearch extends Surveyor
     public function search($params)
     {
         $query = Surveyor::find();
-
+		$query->joinWith(['user']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+		$dataProvider->sort->attributes['user'] = [
+			'asc' => ['user.username' => SORT_ASC],
+			'desc' => ['user.username' => SORT_DESC],
+		];
         $this->load($params);
 
         if (!$this->validate()) {
@@ -73,7 +78,8 @@ class SurveyorSearch extends Surveyor
             ->andFilterWhere(['like', 'no_telp', $this->no_telp])
             ->andFilterWhere(['like', 'fax', $this->fax])
             ->andFilterWhere(['like', 'created_by', $this->created_by])
-            ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
+            ->andFilterWhere(['like', 'updated_by', $this->updated_by])
+			->andFilterWhere(['like', 'user.username', $this->user]);
 
         return $dataProvider;
     }

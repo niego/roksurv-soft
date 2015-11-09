@@ -18,10 +18,10 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        //'css/site.css',
+        'css/site.css',
     ];
     public $js = [
-        //'adminlte/bootstrap/js/bootstrap.min.js'
+        // 'adminlte/bootstrap/js/bootstrap.min.js'
     ];
     public $jsOptions = array(
         'position' => \yii\web\View::POS_HEAD

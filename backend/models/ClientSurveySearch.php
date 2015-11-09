@@ -15,12 +15,14 @@ class ClientSurveySearch extends ClientSurvey
     /**
      * @inheritdoc
      */
+	public $client;
     public function rules()
     {
         return [
             [['client_id'], 'integer'],
             [['qa_trans_kwalitas_jalan', 'qa_energy_listrik', 'qa_water_mng', 'qa_equity_to_asset_ratio', 'qa_fixed_asset_to_total_equity_ratio', 'qn_debt_to_equity_ratio', 'qn_long_term_liabilities', 'ps_extraversi_sikap_sosial', 'ps_agreebleness'], 'boolean'],
-        ];
+			[['client'], 'safe'],
+		];
     }
 
     /**
@@ -42,11 +44,14 @@ class ClientSurveySearch extends ClientSurvey
     public function search($params)
     {
         $query = ClientSurvey::find();
-
+		$query->joinWith(['client']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+		$dataProvider->sort->attributes['client'] = [
+			'asc' => ['client.nama_lengkap' => SORT_ASC],
+			'desc' => ['client.nama_lengkap' => SORT_DESC],
+		];
         $this->load($params);
 
         if (!$this->validate()) {
@@ -67,6 +72,8 @@ class ClientSurveySearch extends ClientSurvey
             'ps_extraversi_sikap_sosial' => $this->ps_extraversi_sikap_sosial,
             'ps_agreebleness' => $this->ps_agreebleness,
         ]);
+		
+		$query->andFilterWhere(['like', 'client.nama_lengkap', $this->client]);
 
         return $dataProvider;
     }
